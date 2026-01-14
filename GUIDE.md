@@ -870,7 +870,9 @@ From [Anthropic's engineering blog](https://www.anthropic.com/engineering/equipp
 2. **Triggered**: When relevant, Claude reads the full `SKILL.md` file
 3. **As needed**: Additional resources load only when referenced
 
-This means you can have dozens of skills installed with minimal context cost.
+This makes skills **extremely token efficient**. A 500-line skill costs zero tokens until triggered. Compare this to putting the same instructions in CLAUDE.md, where they consume context in every single conversation — even when irrelevant.
+
+**Rule of thumb:** If instructions apply to <20% of your conversations, make it a skill instead of adding it to CLAUDE.md.
 
 #### Skill Structure
 
