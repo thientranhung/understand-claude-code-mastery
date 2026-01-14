@@ -6,6 +6,7 @@ This is V2 of the guide that went viral. Huge thanks to u/headset38, u/tulensrma
 
 **What's new in V2:**
 - Part 7: Skills & Hooks — deterministic enforcement over behavioral suggestion
+- Browser MCP comparison guide — Playwright vs Browser MCP vs Browser Use
 - [GitHub repo](https://github.com/TheDecipherist/claude-code-mastery) with ready-to-use templates, hooks, and skills
 
 ---
@@ -301,6 +302,57 @@ claude mcp remove <server-name>
 | **GitHub** | Repo management | `claude mcp add github -- npx -y @modelcontextprotocol/server-github` |
 | **PostgreSQL** | Database queries | `claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres` |
 | **Filesystem** | Extended file access | `claude mcp add fs -- npx -y @anthropic-ai/filesystem-mcp` |
+
+### Browser Automation: Choosing the Right MCP
+
+Browser automation gets its own section because there are multiple solid options with different tradeoffs.
+
+| MCP Server | Best For | Session State | Runs |
+|------------|----------|---------------|------|
+| **Playwright** | Testing, scraping, fresh contexts | ❌ None | Local |
+| **Browser MCP** | Tasks needing your logins | ✅ Your Chrome profile | Local |
+| **Browser Use** | Complex AI-driven workflows | ✅ Cloud profiles | Cloud |
+
+#### Playwright MCP (Default Choice)
+```bash
+claude mcp add playwright -- npx -y @anthropic-ai/playwright-mcp
+```
+**Pros:** Official Anthropic server, reliable, uses accessibility trees for semantic page understanding, well-documented.
+
+**Cons:** Spawns fresh browser contexts — no access to your logged-in sessions. Every task starts from scratch.
+
+**Use when:** Writing tests, scraping public sites, debugging web apps.
+
+#### Browser MCP (Best for Authenticated Tasks)
+```bash
+# Install Chrome extension from https://browsermcp.io
+claude mcp add browser-mcp -- npx -y @anthropic-ai/browser-mcp
+```
+**Pros:** Uses your **actual Chrome profile** — stay logged into Gmail, GitHub, Twitter, etc. Bypasses bot detection using your real browser fingerprint. Local execution = no latency.
+
+**Cons:** Requires Chrome extension. Only works with your current browser session.
+
+**Use when:** "Check my email", "Post to my Twitter", "Review my GitHub notifications" — any task needing your existing logins.
+
+#### Browser Use MCP (AI-Driven Automation)
+```bash
+# Requires API key from https://browser-use.com
+claude mcp add browser-use -- npx -y browser-use-mcp
+```
+**Pros:** AI agent reasoning (describe tasks in natural language), persistent cloud profiles, 85.8% WebVoyager benchmark score, real-time task monitoring.
+
+**Cons:** Cloud-hosted (data leaves your machine), requires API key, higher abstraction = less direct control.
+
+**Use when:** Complex multi-step workflows, tasks requiring persistent cloud sessions, when you need AI to figure out the "how."
+
+#### Quick Decision Guide
+
+```
+Need your logged-in sessions? → Browser MCP
+Need AI to figure out complex steps? → Browser Use
+Writing tests or scraping? → Playwright
+Want the official/stable option? → Playwright
+```
 
 ### MCP in CLAUDE.md
 
